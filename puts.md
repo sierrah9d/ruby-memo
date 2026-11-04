@@ -1,8 +1,3 @@
----
-layout: standalone
-title: print / puts / p / printf の違い
----
-
 ## print / puts / p / printf の違い
 
 ※ 以下のプログラムと出力結果は Ruby 4.0.9（Windows）で確認しています。
