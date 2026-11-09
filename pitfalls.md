@@ -2,6 +2,8 @@
 
 ※ 以下のプログラムと出力結果は Ruby 4.0.9（Windows）で確認しています。
 
+ファイル名を先頭コメントに記載した Ruby のコードブロックは、`sample` フォルダに保存しています。修正例は本文のみに掲載しています。実行するときは `sample` フォルダへ移動してください。修正例の一部は差し替え用の抜粋なので、元のプログラムの対応する箇所を置き換えて使います。
+
 * エラーメッセージに表示される **行番号は「結果が表に出た場所」のことがある**
 * **本当の原因は、その数行前にあることが非常に多い**
 * 特に多いのは以下の 2 種類
@@ -18,6 +20,7 @@
 ### 2-1. プログラム（外側の if の end 抜け）
 
 ```ruby
+# if_end_error.rb
 x = 5
 
 if x > 3
@@ -32,25 +35,25 @@ if x > 3
 
 ### 2-2. エラーメッセージ
 
-Ruby 4.0 で `ruby sample_if_end_error.rb` を実行した例です（色付けなし）。
+Ruby 4.0 で `ruby if_end_error.rb` を実行した例です（色付けなし）。
 
 ```text
-sample_if_end_error.rb: --> sample_if_end_error.rb
+if_end_error.rb: --> if_end_error.rb
 
 Unmatched keyword, missing `end' ?
 
-> 3  if x > 3
+> 4  if x > 3
 
-sample_if_end_error.rb:8: syntax errors found (SyntaxError)
-  1 | x = 5
-  2 |
-> 3 | if x > 3
+if_end_error.rb:9: syntax errors found (SyntaxError)
+  2 | x = 5
+  3 |
+> 4 | if x > 3
     | ^~ expected an `end` to close the conditional clause
-  4 |   puts "x は 3 より大きい"
-  5 |   if x < 10
-  6 |     puts "x は 10 より小さい"
-  7 |   end
-> 8 | ...
+  5 |   puts "x は 3 より大きい"
+  6 |   if x < 10
+  7 |     puts "x は 10 より小さい"
+  8 |   end
+> 9 | ...
     |     ^ unexpected end-of-input, assuming it is closing the parent top level context
 ```
 
@@ -58,9 +61,9 @@ sample_if_end_error.rb:8: syntax errors found (SyntaxError)
 
 ### 2-3. エラーメッセージの読み方
 
-* **3 行目の `if`** に対して、対応する `end` が必要だと示される
-* **8 行目（ファイル末尾）** には、入力の終わりに達したことが示される
-* 内側の `if` は 7 行目の `end` で閉じているため、その後に外側の `if` を閉じる `end` を追加する
+* **4 行目の `if`** に対して、対応する `end` が必要だと示される
+* **9 行目（ファイル末尾）** には、入力の終わりに達したことが示される
+* 内側の `if` は 8 行目の `end` で閉じているため、その後に外側の `if` を閉じる `end` を追加する
 
 👉 **ファイル末尾だけでなく、「expected an `end`」と示された開始行も確認する**
 
@@ -78,7 +81,7 @@ sample_if_end_error.rb:8: syntax errors found (SyntaxError)
 
 ### 「原因は前の行」パターン集
 
-以下は Ruby 4.0 のエラー表示です。各コードを `sample_type_error_1.rb` 〜 `sample_type_error_4.rb` として保存した例です。
+以下は Ruby 4.0 のエラー表示です。各コードを `type_error_1.rb` 〜 `type_error_4.rb` として保存した例です。
 
 ---
 
@@ -87,6 +90,7 @@ sample_if_end_error.rb:8: syntax errors found (SyntaxError)
 #### プログラム
 
 ```ruby
+# type_error_1.rb
 d = [10, 20, 30]
 
 p d[1]      # => 20
@@ -98,11 +102,11 @@ p d[1] + d[4]   # TypeError
 #### エラーメッセージ
 
 ```text
-sample_type_error_1.rb:6:in 'Integer#+': nil can't be coerced into Integer (TypeError)
+type_error_1.rb:7:in 'Integer#+': nil can't be coerced into Integer (TypeError)
 
 p d[1] + d[4]   # TypeError
          ^^^^
-    from sample_type_error_1.rb:6:in '<main>'
+    from type_error_1.rb:7:in '<main>'
 ```
 
 #### 原因
@@ -125,6 +129,7 @@ end
 #### プログラム
 
 ```ruby
+# type_error_2.rb
 print "整数を入力: "
 n = gets        # ← 文字列
 
@@ -134,11 +139,11 @@ p n + 1         # TypeError
 #### エラーメッセージ
 
 ```text
-sample_type_error_2.rb:4:in 'String#+': no implicit conversion of Integer into String (TypeError)
+type_error_2.rb:5:in 'String#+': no implicit conversion of Integer into String (TypeError)
 
 p n + 1         # TypeError
       ^
-    from sample_type_error_2.rb:4:in '<main>'
+    from type_error_2.rb:5:in '<main>'
 ```
 
 #### 原因
@@ -160,6 +165,7 @@ p n + 1
 #### プログラム
 
 ```ruby
+# type_error_3.rb
 prices = {
   "apple" => 150,
   "banana" => 120
@@ -173,11 +179,11 @@ total = prices["apple"] + banana_price
 #### エラーメッセージ
 
 ```text
-sample_type_error_3.rb:8:in 'Integer#+': nil can't be coerced into Integer (TypeError)
+type_error_3.rb:9:in 'Integer#+': nil can't be coerced into Integer (TypeError)
 
 total = prices["apple"] + banana_price
                           ^^^^^^^^^^^^
-    from sample_type_error_3.rb:8:in '<main>'
+    from type_error_3.rb:9:in '<main>'
 ```
 
 #### 原因
@@ -197,6 +203,7 @@ banana_price = prices["banana"]
 #### プログラム
 
 ```ruby
+# type_error_4.rb
 scores = [80, 90, "100"]
 
 sum = 0
@@ -208,13 +215,13 @@ end
 #### エラーメッセージ
 
 ```text
-sample_type_error_4.rb:5:in 'Integer#+': String can't be coerced into Integer (TypeError)
+type_error_4.rb:6:in 'Integer#+': String can't be coerced into Integer (TypeError)
 
   sum += s
          ^
-    from sample_type_error_4.rb:5:in 'block in <main>'
-    from sample_type_error_4.rb:4:in 'Array#each'
-    from sample_type_error_4.rb:4:in '<main>'
+    from type_error_4.rb:6:in 'block in <main>'
+    from type_error_4.rb:5:in 'Array#each'
+    from type_error_4.rb:5:in '<main>'
 ```
 
 #### 原因
@@ -223,7 +230,7 @@ sample_type_error_4.rb:5:in 'Integer#+': String can't be coerced into Integer (T
 
 #### 修正（まず、誤って文字列にした値を直す）
 
-この例では、1 行目の `"100"` の引用符を外し、数値の `100` に直すのが最も直接的な修正です。
+この例では、2 行目の `"100"` の引用符を外し、数値の `100` に直すのが最も直接的な修正です。
 
 ```ruby
 scores = [80, 90, 100]
@@ -255,6 +262,7 @@ PDF や Web ページからコードをコピーしたときや、日本語入�
 ただし、**引用符で囲まれた文字列の内容や、コメントの中にこれらの文字がある場合は、その文字があること自体ではエラーになりません。** 文字列内ではデータとして保持され、コメント内ではコードとして解釈されないためです。文字列展開の `#{...}` 内はコードなので、この説明の対象外です。
 
 ```ruby
+# unicode_string.rb
 message = "こんにちは　世界"  # 引用符内の全角スペースは文字列の一部
 # コメント内の全角スペース　もエラーにはならない
 puts message
@@ -296,13 +304,14 @@ ruby --disable-gems fullwidth.rb
 `puts` の直前に全角スペースが一つあります。
 
 ```ruby
+# fullwidth.rb
 　puts 123
 ```
 
 #### エラーメッセージ
 
 ```text
-fullwidth.rb:1:in '<main>': undefined method '　puts' for main (NoMethodError)
+fullwidth.rb:2:in '<main>': undefined method '　puts' for main (NoMethodError)
 ```
 
 #### 原因と修正
@@ -320,13 +329,14 @@ puts 123
 `puts` の直後に NBSP、その後に半角スペースがあります。
 
 ```ruby
+# nbsp.rb
 puts  123
 ```
 
 #### エラーメッセージ
 
 ```text
-nbsp.rb:1:in '<main>': undefined method 'puts ' for main (NoMethodError)
+nbsp.rb:2:in '<main>': undefined method 'puts ' for main (NoMethodError)
 ```
 
 #### 原因と修正
@@ -341,9 +351,10 @@ puts 123
 
 #### プログラム（zero_width.rb）
 
-2 行目の `count` の直後にゼロ幅スペースがあります。
+3 行目の `count` の直後にゼロ幅スペースがあります。
 
 ```ruby
+# zero_width.rb
 count = 1
 puts count​
 ```
@@ -351,12 +362,12 @@ puts count​
 #### エラーメッセージ
 
 ```text
-zero_width.rb:2:in '<main>': undefined local variable or method 'count​' for main (NameError)
+zero_width.rb:3:in '<main>': undefined local variable or method 'count​' for main (NameError)
 ```
 
 #### 原因と修正
 
-定義した `count` と、ゼロ幅スペースを含む名前は別の名前です。2 行目の変数名を削除して打ち直します。
+定義した `count` と、ゼロ幅スペースを含む名前は別の名前です。3 行目の変数名を削除して打ち直します。
 
 ```ruby
 count = 1
@@ -369,9 +380,10 @@ puts count
 
 #### プログラム（after_variable.rb）
 
-2 行目の `count` の後に「半角スペース → 全角スペース」があります。見えない文字の位置を表すと、`puts[半角スペース]count[半角スペース][全角スペース]` です。
+3 行目の `count` の後に「半角スペース → 全角スペース」があります。見えない文字の位置を表すと、`puts[半角スペース]count[半角スペース][全角スペース]` です。
 
 ```ruby
+# after_variable.rb
 count = 1
 puts count 　
 ```
@@ -379,7 +391,7 @@ puts count 　
 #### エラーメッセージ
 
 ```text
-after_variable.rb:2:in '<main>': undefined local variable or method '　' for main (NameError)
+after_variable.rb:3:in '<main>': undefined local variable or method '　' for main (NameError)
 ```
 
 #### 原因と修正
@@ -463,6 +475,7 @@ NBSP（U+00A0）やゼロ幅スペース（U+200B）でも、同じ配置で `Na
 次のコードを `check_invisible.rb` として保存すると、UTF-8 のファイルから代表的な混入文字の位置を探せます。文字位置は、タブの表示幅などを考慮した画面上の列ではなく、行頭からの文字数です。
 
 ```ruby
+# check_invisible.rb
 source = File.read(ARGV.fetch(0), encoding: "UTF-8")
 suspicious = /[\u3000\u00A0\u200B\uFEFF]/
 
@@ -487,7 +500,7 @@ ruby check_invisible.rb fullwidth.rb
 出力例：
 
 ```text
-1行 1文字目: U+3000
+2行 1文字目: U+3000
 ```
 
 これは修正が必要な箇所の候補を探すスクリプトです。文字列やコメント内の全角スペース、ファイル先頭の BOM（U+FEFF）なども検出します。検出した文字がすべて誤りとは限りません。
@@ -552,6 +565,7 @@ ruby check_invisible.rb fullwidth.rb
 値と型を調べる例：
 
 ```ruby
+# debug_value.rb
 value = [10, 20, 30][4]
 p value        # => nil
 p value.class  # => NilClass
